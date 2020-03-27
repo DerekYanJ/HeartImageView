@@ -125,7 +125,7 @@ public class HeartImageView extends ImageView {
 		Bitmap scaledBitmap;// 根据diameter对截取的正方形位图进行缩放
 		Log.i("HeartImageView", "radius:" + radius);
 		int diameter = radius * 2;
-		// 传入位图的宽高
+		// 位图的宽高
 		int w = bmp.getWidth();
 		int h = bmp.getHeight();
 		// 为了防止宽高不相等，造成圆形图片变形，因此截取长方形中处于中间位置最大的正方形图片
@@ -134,12 +134,14 @@ public class HeartImageView extends ImageView {
 		// 对squareBitmap进行缩放为diameter边长的正方形位图
 		if (squareBitmap.getWidth() != diameter
 				|| squareBitmap.getHeight() != diameter) {
-			Log.e("HeartImageView", squareBitmap.getWidth() + "  -  " + squareBitmap.getHeight());
-			scaledBitmap = Bitmap.createScaledBitmap(squareBitmap, diameter,
-					diameter, true);
+
+			//从图中截取正中间的正方形部分。
+			scaledBitmap = centerSquareScaleBitmap(squareBitmap, diameter);
+
 		} else {
 			scaledBitmap = squareBitmap;
 		}
+
 
 		Bitmap outputbmp = Bitmap.createBitmap(scaledBitmap.getWidth(),
 				scaledBitmap.getHeight(), Config.ARGB_8888);
@@ -180,6 +182,54 @@ public class HeartImageView extends ImageView {
 
 		return outputbmp;
 
+	}
+
+	/**
+
+	 * @param bitmap      原图
+	 * @param edgeLength  希望得到的正方形部分的边长
+	 * @return  缩放截取正中部分后的位图。
+	 */
+	public static Bitmap centerSquareScaleBitmap(Bitmap bitmap, int edgeLength)
+	{
+		if(null == bitmap || edgeLength <= 0)
+		{
+			return  null;
+		}
+
+		Bitmap result = bitmap;
+		int widthOrg = bitmap.getWidth();
+		int heightOrg = bitmap.getHeight();
+
+		if(widthOrg > edgeLength && heightOrg > edgeLength)
+		{
+			//压缩到一个最小长度是edgeLength的bitmap
+			int longerEdge = (int)(edgeLength * Math.max(widthOrg, heightOrg) / Math.min(widthOrg, heightOrg));
+			int scaledWidth = widthOrg > heightOrg ? longerEdge : edgeLength;
+			int scaledHeight = widthOrg > heightOrg ? edgeLength : longerEdge;
+			Bitmap scaledBitmap;
+
+			try{
+				scaledBitmap = Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, true);
+			}
+			catch(Exception e){
+				return null;
+			}
+
+			//从图中截取正中间的正方形部分。
+			int xTopLeft = (scaledWidth - edgeLength) / 2;
+			int yTopLeft = (scaledHeight - edgeLength) / 2;
+
+			try{
+				result = Bitmap.createBitmap(scaledBitmap, xTopLeft, yTopLeft, edgeLength, edgeLength);
+				scaledBitmap.recycle();
+			}
+			catch(Exception e){
+				return null;
+			}
+		}
+
+		return result;
 	}
 
 }

@@ -16,6 +16,7 @@
         heartview:border_size="2dp"
         heartview:out_border_color="#ff0000"
         android:src="@mipmap/ic_img"
+        android:scaleType="centerCrop"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
