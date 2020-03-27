@@ -161,11 +161,11 @@ public class HeartImageView extends ImageView {
 		Path path = new Path();
 
 		//右心形
-		path.moveTo(diameter / 2, diameter / 7);
-		path.cubicTo((diameter /6) * 5  , 0 - ( diameter / 5), (diameter / 5) * 7  , (diameter / 5) * 2  , diameter / 2, diameter- border_size );
+		path.moveTo(diameter / 2f, diameter / 7f);
+		path.cubicTo((diameter /6f) * 5  , 0 - ( diameter / 5f), (diameter / 5f) * 7  , (diameter / 5f) * 2  , diameter / 2f, diameter- border_size );
 		//左心形
-		path.moveTo(diameter / 2, diameter / 7);
-		path.cubicTo(diameter / 6 , 0 - ( diameter / 5), 0 - (diameter / 5) * 2, (diameter / 5) * 2, diameter / 2, diameter - border_size );
+		path.moveTo(diameter / 2f, diameter / 7f);
+		path.cubicTo(diameter / 6f , 0 - ( diameter / 5f), 0 - (diameter / 5f) * 2, (diameter / 5f) * 2, diameter / 2f, diameter - border_size );
 
 		canvas.drawPath(path, paint);
 
