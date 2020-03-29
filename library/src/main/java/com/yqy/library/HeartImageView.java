@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
@@ -132,12 +133,28 @@ public class HeartImageView extends ImageView {
 
 		squareBitmap = bmp;
 		// 对squareBitmap进行缩放为diameter边长的正方形位图
-		if (squareBitmap.getWidth() != diameter
-				|| squareBitmap.getHeight() != diameter) {
+		if (w != diameter
+				|| h != diameter) {
 
-			//从图中截取正中间的正方形部分。
-			scaledBitmap = centerSquareScaleBitmap(squareBitmap, diameter);
+			if (w < diameter || h < diameter) {
+				//位图宽高没有ImageView的宽高大 需要放大
+				float scale; //缩放倍数
+				scale = 1f * diameter / (Math.min(w, h));
+				Matrix matrix = new Matrix();
+				matrix.postScale(scale,scale);
 
+				squareBitmap =  Bitmap.createBitmap(squareBitmap,0,0,w,h,matrix,false);
+
+				if (w != h) {
+					//从矩形图中截取正中间的正方形部分。
+					scaledBitmap = centerSquareScaleBitmap(squareBitmap, diameter);
+				} else {
+					scaledBitmap = squareBitmap;
+				}
+			} else {
+				//从矩形图中截取正中间的正方形部分。
+				scaledBitmap = centerSquareScaleBitmap(squareBitmap, diameter);
+			}
 		} else {
 			scaledBitmap = squareBitmap;
 		}
